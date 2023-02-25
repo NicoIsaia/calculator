@@ -20,6 +20,17 @@
     background-color: lightgray;
     margin-top: 10px;
     border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+#display-value {
+    margin: 10px;
+    font-size: larger;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #303030;
 }
 
 #buttons {
