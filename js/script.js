@@ -45,7 +45,6 @@ function numbLogger(event) {
             if (num.textContent === "." && displayVar.includes(".")) {
                 // do nothing
             } else {
-                console.log(displayVar);
                 displayVar += num.textContent;
                 display.textContent = displayVar;
             }
@@ -107,7 +106,13 @@ function operation(event) {
         if (!displayVar) displayVar = firstNum;
         displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
         oper = event.target.textContent;
-        display.textContent = Math.round((displayVar + Number.EPSILON) * 100) / 100;
+        if (displayVar === NaN) { // QUEDASTE ACÁ
+        /* Sección repetida en la siguiente función. No funciona.
+        Si la uso con clics sigue dando NaN y si la uso con teclas da 0*/
+            display.textContent = "Zero Div Error";
+        } else {
+            display.textContent = Math.round((displayVar + Number.EPSILON) * 100) / 100;
+        }
         firstNum = displayVar;
         displayVar = "";
     }
@@ -124,7 +129,11 @@ function operationWithKeys(key) {
         if (!displayVar) displayVar = 0;
         displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
         oper = key;
-        display.textContent = Math.round((displayVar + Number.EPSILON) * 100) / 100;
+        if (displayVar === NaN) {
+            display.textContent = "Zero Div Error";
+        } else {
+            display.textContent = Math.round((displayVar + Number.EPSILON) * 100) / 100;
+        }
         firstNum = displayVar;
         displayVar = "";
     }
