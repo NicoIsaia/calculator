@@ -36,16 +36,23 @@ let displayVar = "";
 
 const numbers = document.querySelectorAll("button.number");
 let display = document.querySelector("#display-value");
+let test = "";
 
 function numbLogger(event) {
     let num = event.target;
-    if (displayVar.length < 15) {
-        if (num.textContent === "." && displayVar.includes(".")) {
-            // do nothing
-        } else {
-            displayVar += num.textContent;
-            display.textContent = displayVar;
+    if (displayVar) {
+        if (displayVar.length < 15) {
+            if (num.textContent === "." && displayVar.includes(".")) {
+                // do nothing
+            } else {
+                console.log(displayVar);
+                displayVar += num.textContent;
+                display.textContent = displayVar;
+            }
         }
+    } else {
+        displayVar += num.textContent;
+        display.textContent = displayVar;
     }
 }
 
@@ -69,7 +76,8 @@ function keyLogger(event) {
     if (symbols.includes(num)) {
         if (num === "Enter") {
             if (oper) {
-                if (!displayVar) displayVar = 0;
+                if (!displayVar && !firstNum) displayVar = 0;
+                if (!displayVar) displayVar = firstNum;
                 if (!firstNum) firstNum = 0;
                 if (!oper) oper = "+";
                 displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
@@ -95,7 +103,8 @@ function operation(event) {
         oper = event.target.textContent;
         displayVar = "";
     } else {
-        if (!displayVar) displayVar = 0;
+        if (!displayVar && !firstNum) displayVar = 0;
+        if (!displayVar) displayVar = firstNum;
         displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
         oper = event.target.textContent;
         display.textContent = Math.round((displayVar + Number.EPSILON) * 100) / 100;
@@ -111,6 +120,7 @@ function operationWithKeys(key) {
         oper = key;
         displayVar = "";
     } else {
+        if (!displayVar && !firstNum) displayVar = 0;
         if (!displayVar) displayVar = 0;
         displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
         oper = key;
@@ -141,7 +151,7 @@ divi.addEventListener('click', operation);
 const equal = document.querySelector('.equal');
 equal.addEventListener('click', () => {
     if (oper) {
-        if (!displayVar) displayVar = 0;
+        if (!displayVar) displayVar = firstNum;
         if (!firstNum) firstNum = 0;
         if (!oper) oper = "+";
         displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
