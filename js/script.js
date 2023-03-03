@@ -30,13 +30,16 @@ function operate(a, b, op) {
     }
 };
 
+// Variable to store operand
 let oper = "";
+// Variable to store first number (or result of previous operation)
 let firstNum = "";
+// Variable to store number being displayed
 let displayVar = "";
 
 const numbers = document.querySelectorAll("button.number");
 let display = document.querySelector("#display-value");
-let test = "";
+
 
 function numbLogger(event) {
     let num = event.target;
@@ -46,12 +49,16 @@ function numbLogger(event) {
                 // do nothing
             } else {
                 displayVar += num.textContent;
-                display.textContent = displayVar;
+                //displayVar = toString(parseInt(displayVar)) // QUEDASTE ACÁ
+                /* Evitando ceros a la izquierda. La idea es convertir a int y
+                después volver a string, pero por algún motivo si ponés dos
+                ceros da NaN. Me tengo que ir.*/
+                display.textContent = parseInt(displayVar);
             }
         }
     } else {
         displayVar += num.textContent;
-        display.textContent = displayVar;
+        display.textContent = parseInt(displayVar);
     }
 }
 
@@ -64,13 +71,16 @@ function keyLogger(event) {
                 // do nothing
             } else {
                 displayVar += num;
-                display.textContent = displayVar;
+                display.textContent = parseInt(displayVar);
             }
         }
     }
     if (num === "c" || num === "C") {
         clearMem();
     }
+
+    if (num === "Backspace") backspace();
+
     const symbols = ["+", "-", "*", "/", "Enter"]
     if (symbols.includes(num)) {
         if (num === "Enter") {
@@ -80,7 +90,11 @@ function keyLogger(event) {
                 if (!firstNum) firstNum = 0;
                 if (!oper) oper = "+";
                 displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
-                display.textContent = Math.round((displayVar + Number.EPSILON) * 100) / 100;
+                if (displayVar === "error") {
+                    display.textContent = "Destroying universe";
+                } else {
+                    display.textContent = Math.round((displayVar + Number.EPSILON) * 100) / 100;
+                }
                 firstNum = "";
             }
         } else {
@@ -106,15 +120,23 @@ function operation(event) {
         if (!displayVar) displayVar = firstNum;
         displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
         oper = event.target.textContent;
-        if (displayVar === NaN) { // QUEDASTE ACÁ
-        /* Sección repetida en la siguiente función. No funciona.
-        Si la uso con clics sigue dando NaN y si la uso con teclas da 0*/
-            display.textContent = "Zero Div Error";
+        if (displayVar === "error") {
+            display.textContent = "deleting universe";
         } else {
             display.textContent = Math.round((displayVar + Number.EPSILON) * 100) / 100;
         }
         firstNum = displayVar;
         displayVar = "";
+    }
+}
+
+function backspace() {
+    if (displayVar.length > 1) {
+        displayVar = displayVar.slice(0, -1);
+        display.textContent = displayVar;
+    } else {
+        displayVar = "";
+        display.textContent = "0";
     }
 }
 
@@ -129,8 +151,8 @@ function operationWithKeys(key) {
         if (!displayVar) displayVar = 0;
         displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
         oper = key;
-        if (displayVar === NaN) {
-            display.textContent = "Zero Div Error";
+        if (displayVar === "error") {
+            display.textContent = "deleting universe";
         } else {
             display.textContent = Math.round((displayVar + Number.EPSILON) * 100) / 100;
         }
@@ -151,20 +173,26 @@ const plus = document.querySelector('.plus');
 const minus = document.querySelector('.minus');
 const multiplicate = document.querySelector('.multiplicate');
 const divi = document.querySelector('.divide');
+const back = document.querySelector('.back');
 
 plus.addEventListener('click', operation);
 minus.addEventListener('click', operation);
 multiplicate.addEventListener('click', operation);
 divi.addEventListener('click', operation);
+back.addEventListener('click', backspace)
 
 const equal = document.querySelector('.equal');
 equal.addEventListener('click', () => {
     if (oper) {
-        if (!displayVar) displayVar = firstNum;
         if (!firstNum) firstNum = 0;
+        if (!displayVar) displayVar = firstNum;
         if (!oper) oper = "+";
         displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
-        display.textContent = Math.round((displayVar + Number.EPSILON) * 100) / 100;
+        if (displayVar === "error") {
+            display.textContent = "deleting universe";
+        } else {
+            display.textContent = Math.round((displayVar + Number.EPSILON) * 100) / 100;
+        }
         firstNum = "";
     } 
 });
