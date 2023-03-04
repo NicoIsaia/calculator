@@ -48,17 +48,23 @@ function numbLogger(event) {
             if (num.textContent === "." && displayVar.includes(".")) {
                 // do nothing
             } else {
-                displayVar += num.textContent;
-                //displayVar = toString(parseInt(displayVar)) // QUEDASTE ACÁ
-                /* Evitando ceros a la izquierda. La idea es convertir a int y
-                después volver a string, pero por algún motivo si ponés dos
-                ceros da NaN. Me tengo que ir.*/
-                display.textContent = parseInt(displayVar);
+                if (num.textContent === ".") {
+                    displayVar += num.textContent;
+                    display.textContent = displayVar;                    
+                } else {
+                    displayVar += num.textContent;
+                    display.textContent = parseFloat(displayVar);
+                }
             }
         }
     } else {
-        displayVar += num.textContent;
-        display.textContent = parseInt(displayVar);
+        if (displayVar.length === 0 && num.textContent === ".") {
+            displayVar += "0.";
+            display.textContent = displayVar;
+        } else {
+            displayVar += num.textContent;
+            display.textContent = parseFloat(displayVar);
+        }
     }
 }
 
@@ -70,8 +76,16 @@ function keyLogger(event) {
             if (num === "." && displayVar.includes(".")) {
                 // do nothing
             } else {
-                displayVar += num;
-                display.textContent = parseInt(displayVar);
+                if (num === "." && displayVar.length === 0) {
+                    displayVar = "0.";
+                    display.textContent = displayVar;
+                } else if (num === ".") {
+                    displayVar += num;
+                    display.textContent = displayVar;                    
+                } else {
+                    displayVar += num;
+                    display.textContent = parseFloat(displayVar);
+                }
             }
         }
     }
