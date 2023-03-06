@@ -105,7 +105,9 @@ function keyLogger(event) {
                 if (!oper) oper = "+";
                 displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
                 if (displayVar === "error") {
-                    display.textContent = "Destroying universe";
+                    display.textContent = "deleting universe";
+                    displayVar = "";
+                    firstNum = "";
                 } else {
                     display.textContent = Math.round((displayVar + Number.EPSILON) * 100) / 100;
                 }
@@ -124,18 +126,20 @@ function clearMem() {
 }
 
 function operation(event) {
-    if (!firstNum) {
-        if (!displayVar) displayVar = display.textContent;
+    if (!firstNum) { 
+        if (!displayVar) displayVar = (display.textContent === "deleting universe") ? "0" : display.textContent;
         firstNum = displayVar;
         oper = event.target.textContent;
         displayVar = "";
     } else {
-        if (!displayVar && !firstNum) displayVar = display.textContent;
+        if (!displayVar && !firstNum) displayVar = (display.textContent === "deleting universe") ? "0" : display.textContent;
         if (!displayVar) displayVar = firstNum;
         displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
         oper = event.target.textContent;
         if (displayVar === "error") {
             display.textContent = "deleting universe";
+            displayVar = "";
+            firstNum = "";
         } else {
             display.textContent = Math.round((displayVar + Number.EPSILON) * 100) / 100;
         }
@@ -156,17 +160,19 @@ function backspace() {
 
 function operationWithKeys(key) {
     if (!firstNum) {
-        if (!displayVar) displayVar = display.textContent;
+        if (!displayVar) displayVar = (display.textContent === "deleting universe") ? "0" : display.textContent;
         firstNum = displayVar;
         oper = key;
         displayVar = "";
     } else {
-        if (!displayVar && !firstNum) displayVar = display.textContent;
+        if (!displayVar && !firstNum) displayVar = (display.textContent === "deleting universe") ? "0" : display.textContent;
         if (!displayVar) displayVar = firstnum;
         displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
         oper = key;
         if (displayVar === "error") {
             display.textContent = "deleting universe";
+            displayVar = "";
+            firstNum = "";
         } else {
             display.textContent = Math.round((displayVar + Number.EPSILON) * 100) / 100;
         }
