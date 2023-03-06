@@ -100,8 +100,8 @@ function keyLogger(event) {
         if (num === "Enter") {
             if (oper) {
                 if (!displayVar && !firstNum) displayVar = 0;
-                if (!displayVar) displayVar = firstNum;
                 if (!firstNum) firstNum = 0;
+                if (!displayVar) displayVar = firstNum;                
                 if (!oper) oper = "+";
                 displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
                 if (displayVar === "error") {
