@@ -125,12 +125,12 @@ function clearMem() {
 
 function operation(event) {
     if (!firstNum) {
-        if (!displayVar) displayVar = 0;
+        if (!displayVar) displayVar = display.textContent;
         firstNum = displayVar;
         oper = event.target.textContent;
         displayVar = "";
     } else {
-        if (!displayVar && !firstNum) displayVar = 0;
+        if (!displayVar && !firstNum) displayVar = display.textContent;
         if (!displayVar) displayVar = firstNum;
         displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
         oper = event.target.textContent;
@@ -156,13 +156,13 @@ function backspace() {
 
 function operationWithKeys(key) {
     if (!firstNum) {
-        if (!displayVar) displayVar = 0;
+        if (!displayVar) displayVar = display.textContent;
         firstNum = displayVar;
         oper = key;
         displayVar = "";
     } else {
-        if (!displayVar && !firstNum) displayVar = 0;
-        if (!displayVar) displayVar = 0;
+        if (!displayVar && !firstNum) displayVar = display.textContent;
+        if (!displayVar) displayVar = firstnum;
         displayVar = operate(parseFloat(firstNum), parseFloat(displayVar), oper);
         oper = key;
         if (displayVar === "error") {
@@ -207,6 +207,9 @@ equal.addEventListener('click', () => {
         } else {
             display.textContent = Math.round((displayVar + Number.EPSILON) * 100) / 100;
         }
+        displayVar = ""; // Last bug, if I leave this, the calculator restarts
+        // after pressing equal, but I can't use the number on the display
+        // for subsequent operations
         firstNum = "";
     } 
 });
